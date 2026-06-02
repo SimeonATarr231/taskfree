@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFree — Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* RESET & VARIABLES */
+    *, 
+    *::before, 
+    *::after {  
+        margin: 0; 
+        padding: 0;
+        box-sizing: border-box; 
+    }
+
+    :root {
+        --black:   #0a0a0a;
+        --white:   #f5f0e8;
+        --accent:  #ff4d00;
+        --mid:     #1a1a1a;
+        --border:  #2a2a2a;
+        --muted:   #666;
+        --mono:    'Space Mono', monospace;
+        --display: 'Syne', sans-serif;
+    }
+
+    /* BASE */
+    body {
+        background: var(--black);
+        color: var(--white);
+        font-family: var(--mono);
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    /* LEFT PANEL */
+    .left-panel {
+        padding: 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border-right: 1px solid var(--border);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .left-panel::before {
+        content: '';
+        position: absolute;
+        top: -100px;
+        left: -100px;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(255,77,0,0.15) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+    .logo {
+        font-family: var(--display);
+        font-size: 1.2rem;
+        font-weight: 800;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+
+    .hero-text h1 {
+        font-family: var(--display);
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 800;
+        line-height: 1.05;
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-text h1 span {
+        color: var(--accent);
+        display: block;
+    }
+
+    .hero-text p {
+        color: var(--muted);
+        font-size: 0.85rem;
+        line-height: 1.8;
+        max-width: 360px;
+    }
+
+    .stats {
+        display: flex;
+        gap: 2rem;
+    }
+
+    .stat-item {
+        border-top: 1px solid var(--border);
+        padding-top: 1rem;
+    }
+
+    .stat-number {
+        font-family: var(--display);
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--accent);
+    }
+
+    .stat-label {
+        font-size: 0.7rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-top: 0.25rem;
+    }
+
+    /* RIGHT PANEL */
+    .right-panel {
+        padding: 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    /* TABS */
+    .tabs {
+        display: flex;
+        gap: 0;
+        margin-bottom: 2.5rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .tab-btn {
+        background: none;
+        border: none;
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        padding: 0.75rem 1.5rem;
+        cursor: pointer;
+        position: relative;
+        transition: color 0.2s;
+    }
+
+    .tab-btn.active {
+        color: var(--white);
+    }
+
+    .tab-btn.active::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--accent);
+    }
+
+    /* FORMS */
+    .form-panel { 
+        display: none; 
+    }
+
+    .form-panel.active { 
+        display: block; 
+    }
+
+    .form-title {
+        font-family: var(--display);
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-subtitle {
+        color: var(--muted);
+        font-size: 0.78rem;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+
+    .field {
+        margin-bottom: 1.25rem;
+    }
+
+    .field label {
+        display: block;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: var(--muted);
+        margin-bottom: 0.5rem;
+    }
+
+    .field input {
+        width: 100%;
+        background: var(--mid);
+        border: 1px solid var(--border);
+        color: var(--white);
+        font-family: var(--mono);
+        font-size: 0.85rem;
+        padding: 0.85rem 1rem;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+
+    .field input:focus {
+        border-color: var(--accent);
+    }
+
+    .field input::placeholder {
+        color: #444;
+    }
+
+    .submit-btn {
+        width: 100%;
+        background: var(--accent);
+        color: var(--black);
+        border: none;
+        font-family: var(--display);
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        padding: 1rem;
+        cursor: pointer;
+        margin-top: 0.5rem;
+        transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .submit-btn:hover { 
+        opacity: 0.9; 
+    }
+
+    .submit-btn:active { 
+        transform: scale(0.99); 
+    }
+
+    .submit-btn:disabled { 
+        opacity: 0.5; 
+        cursor: not-allowed; 
+    }
+
+    /* MESSAGE */
+    .message {
+        font-size: 0.78rem;
+        padding: 0.75rem 1rem;
+        margin-top: 1rem;
+        display: none;
+    }
+
+    .message.error {
+        background: rgba(255,77,0,0.1);
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        display: block;
+    }
+
+    .message.success {
+        background: rgba(0,255,100,0.08);
+        border: 1px solid #00ff64;
+        color: #00ff64;
+        display: block;
+    }
+
+    /* RESPONSIVENESS  */
+    @media (max-width: 768px) {
+      body { 
+            grid-template-columns: 1fr; 
+        }
+
+        .left-panel {
+            display: block;
+        }
+
+        .right-panel { 
+            padding: 40px 24px; 
+        }
+    }
+  </style>
+</head>
+<body>
+    <!-- LEFT PANEL — branding -->
+    <div class="left-panel">
+        <div class="logo">TaskFree</div>
+        <div class="hero-text">
+            <h1>Manage tasks.<span>Stay free.</span></h1>
+            <p>A no-nonsense task manager built for people who want to get things done without the bloat.</p>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Tasks</div>
+            </div>
+
+            <div class="stat-item">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Distractions</div>
+            </div>
+
+            <div class="stat-item">
+                <div class="stat-number">1</div>
+                <div class="stat-label">Focus</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL — auth forms -->
+    <div class="right-panel">
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="login">Login</button>
+            <button class="tab-btn" data-tab="register">Register</button>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <div class="form-panel active" id="login">
+            <div class="form-title">Welcome back.</div>
+            <div class="form-subtitle">Enter your credentials to access your tasks.</div>
+
+            <div class="field">
+                <label>Email</label>
+                <input type="email" id="login-email" placeholder="you@example.com">
+            </div>
+
+            <div class="field">
+                <label>Password</label>
+                <input type="password" id="login-password" placeholder="••••••••">
+            </div>
+            <button class="submit-btn" id="login-btn">Login</button>
+            <div class="message" id="login-message"></div>
+        </div>
+
+        <!-- REGISTER FORM -->
+        <div class="form-panel" id="register">
+            <div class="form-title">Create account.</div>
+            <div class="form-subtitle">Join and start managing your tasks today.</div>
+
+            <div class="field">
+                <label>Username</label>
+                <input type="text" id="reg-username" placeholder="yourname">
+            </div>
+
+            <div class="field">
+                <label>Email</label>
+                <input type="email" id="reg-email" placeholder="you@example.com">
+            </div>
+
+            <div class="field">
+                <label>Password</label>
+                <input type="password" id="reg-password" placeholder="min. 6 characters">
+            </div>
+            <button class="submit-btn" id="register-btn">Create Account</button>
+            <div class="message" id="register-message"></div>
+        </div>
+    </div>
+
+    <script src="/js/auth.js"></script>
+</body>
+</html>
