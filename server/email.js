@@ -1,13 +1,5 @@
-const nodemailer = require('nodemailer');
-
-/* Create the email transporter using Gmail */
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD
-  }
-});
+const { Resend } = require('resend');
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 
 /* Send Verification */
@@ -15,8 +7,8 @@ const sendVerificationEmail = async (toEmail, username, token) => {
   const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
   const verifyUrl = `${baseUrl}/api/auth/verify-email?token=${token}`;
 
-  await transporter.sendMail({
-    from: `"TaskSy" <${process.env.FROM_EMAIL}>`,
+  await resend.emails.send({
+    from: process.env.FROM_EMAIL,
     to: toEmail,
     subject: 'Verify your TaskSy account',
     html: `
@@ -75,8 +67,8 @@ const sendPasswordResetEmail = async (toEmail, username, token) => {
   const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
   const resetUrl = `${baseUrl}/reset-password.html?token=${token}`;
 
-  await transporter.sendMail({
-    from: `"TaskSy" <${process.env.FROM_EMAIL}>`,
+  await resend.emails.send({
+    from: process.env.FROM_EMAIL,
     to: toEmail,
     subject: 'Reset your TaskSy password',
     html: `
