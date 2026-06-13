@@ -14,7 +14,7 @@ const generateToken = () => {
   return crypto.randomBytes(32).toString('hex');
 };
 
-// ── HELPER: Get expiry timestamp ───────────────────────────────
+/* HELPER: Get expiry timestamp */
 // hours parameter controls how long the token lives
 const getExpiryTime = (hours) => {
   const now = new Date();
@@ -23,7 +23,7 @@ const getExpiryTime = (hours) => {
   return now.toISOString().replace('T', ' ').substring(0, 19);
 };
 
-// ── REGISTER ───────────────────────────────────────────────────
+/* REGISTER */
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
   const { username, email, password } = req.body;
@@ -91,7 +91,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// ── VERIFY EMAIL ───────────────────────────────────────────────
+/* VERIFY EMAIL */
 // GET /api/auth/verify-email?token=xxxxx
 router.get('/verify-email', (req, res) => {
   const { token } = req.query;
@@ -136,7 +136,7 @@ router.get('/verify-email', (req, res) => {
   }
 });
 
-// ── RESEND VERIFICATION EMAIL ───────────────────────────────────
+/* RESEND VERIFICATION EMAIL */
 // POST /api/auth/resend-verification
 router.post('/resend-verification', async (req, res) => {
   const { email } = req.body;
@@ -177,7 +177,7 @@ router.post('/resend-verification', async (req, res) => {
   }
 });
 
-// ── LOGIN ──────────────────────────────────────────────────────
+/* LOGIN */
 // POST /api/auth/login
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
@@ -221,7 +221,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// ── LOGOUT ─────────────────────────────────────────────────────
+/* LOGOUT */
 // POST /api/auth/logout
 router.post('/logout', (req, res) => {
   req.session.destroy((err) => {
@@ -277,7 +277,12 @@ router.post('/forgot-password', async (req, res) => {
       VALUES (?, ?, 'password_reset', ?)
     `).run(user.id, token, expiresAt);
 
-    await sendPasswordResetEmail(email, user.username, token);
+    try {
+      await sendPasswordResetEmail(email, user.username, token);
+      console.log('Password reset email sent successfully to:', email);
+    } catch (emailError) {
+      console.error('Password reset email failed:', emailError.message);
+    }
 
     res.json({ message: 'If that email is registered, a reset link has been sent.' });
 
